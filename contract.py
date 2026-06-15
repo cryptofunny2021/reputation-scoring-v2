@@ -1,5 +1,5 @@
-# Reputation Scoring v2.0
-# Connected Reputation System for SocialFi
+# v2.0
+# { "Depends": "py-genlayer:1jb45aa8ynh2a9c9xn3b7qqh8sm5q93hwfp7jqmwsfhh8jpz09h6" }
 
 from genlayer import *
 
@@ -12,20 +12,19 @@ class ReputationScoring(gl.Contract):
 
     @gl.public.write
     def record_action(self, value: u256) -> None:
-        """Record user action and update reputation"""
         user = gl.message.sender_address
         current = self.scores.get(user, u256(0))
         self.scores[user] = current + value
 
-        # Auto reward tokens (if value is positive)
+        # Auto mint token reward
         if value > u256(0):
             try:
                 token = gl.contract(self.token_address)
-                token.mint(value // u256(2))  # 50% of reputation as tokens
+                token.mint(value // u256(2))
             except:
-                pass  # Safe call
+                pass
 
     @gl.public.view
     def my_score(self) -> u256:
-        """Get my reputation score"""
-        return self.scores.get(gl.message.sender_address, u256(0))
+        user = gl.message.sender_address
+        return self.scores.get(user, u256(0))
