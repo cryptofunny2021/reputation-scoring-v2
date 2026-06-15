@@ -7,14 +7,8 @@ class ReputationScoring(gl.Contract):
     scores: TreeMap[Address, u256]
     token_address: Address
 
-    def __init__(self):
-        # Default token address (can be updated later)
-        self.token_address = Address("0x698c060E742D37E4742aEf4d790ba1543325C15b")
-
-    @gl.public.write
-    def set_token_address(self, new_token: Address) -> None:
-        """Update token address if needed"""
-        self.token_address = new_token
+    def __init__(self, token_addr: Address):
+        self.token_address = token_addr
 
     @gl.public.write
     def record_action(self, value: u256) -> None:
